@@ -38,12 +38,12 @@ Multi-Image Build
 hardening_manifest.yaml
 ...
 - filename: fastprogress-1.0.0-py3-none-any.whl
-  url: https://files.pythonhosted.org/packages/eb/1f/c61b92d806fbd06ad75d08440efe7f2bd1006ba0b15d086debed49d93cdc/fastprogress-1.0.0-py3-none-any.whl
+  url: https://files\.pythonhosted.org/packages/eb/1f/c61b92d806fbd06ad75d08440efe7f2bd1006ba0b15d086debed49d93cdc/fastprogress-1.0.0-py3-none-any.whl
   validation:
     type: sha256
     value: 474cd6a6e5b1c29a02383d709bf71f502477d0849bddc6ba5aa80b683f4ad16f
 - filename: alembic-1.6.4-py2.py3-none-any.whl
-  url: https://files.pythonhosted.org/packages/eb/bd/c3486fd57a3eec5162a2e32e8f05880c990f0d92b03d268342d2e8fe7032/alembic-1.6.4-py2.py3-none-any.whl
+  url: https://files\.pythonhosted.org/packages/eb/bd/c3486fd57a3eec5162a2e32e8f05880c990f0d92b03d268342d2e8fe7032/alembic-1.6.4-py2.py3-none-any.whl
   validation:
     type: sha256
     value: dd0fd7109f82cd1d7ea64b26f287534a1ad1bc5deab79807926d5f3f5b3b517c

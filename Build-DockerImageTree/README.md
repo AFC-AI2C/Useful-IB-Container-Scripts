@@ -2,6 +2,8 @@
 
 This script will build multiple images in parent, child, grandchild, etc order. It iterates through each provided project's hardening_manifest.yaml file and parses out URLs to be downloaded. To reduce bandwidth consumption, if files are detected within the project directory, they are not downloaded. If a test_commands.txt file is provided within the project directory, they will be executed against a container to provide a basic functionality assessment.
 
+![Alt text](https://github.com/AFC-AI2C/Useful-IB-Container-Scripts/blob/main/Build-DockerImageTree/screenshot.png)
+
 ## Usage:
 ./Build-DockerImageTree.sh image
 ./Build-DockerImageTree.sh parent_image child_image grandchild_image ..etc
@@ -23,7 +25,6 @@ test_commands.txt needs to be in the same dir as the Dockerfile
     netstat
     python3.6 -c 'import plotly'
 
-![Alt text](https://github.com/AFC-AI2C/Useful-IB-Container-Scripts/screenshot.png)
 
 ## Examples:
 ### Script Execution

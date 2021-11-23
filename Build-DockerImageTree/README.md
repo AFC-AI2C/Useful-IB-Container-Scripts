@@ -1,6 +1,6 @@
 # Build-DockerImageTree.sh
 
-This script will build multiple images in parent, child, grandchild, etc order. It iterates through each provided project's hardening_manifest.yaml file and parses out URLs to be downloaded. To reduce bandwidth consumption, if files are detected within the project directory, they are not downloaded. If a test_commands.txt file is provided within the project directory, they will be executed against a container to provide a basic functionality assessment.
+This script was developed to expedite the development and testing of local images that must be IB DecSecOps Pipeline compliant. The script will build a single image or multiple in parent, child, grandchild, etc relationship order. It iterates through each project's hardening_manifest.yaml file and parses out URLs to be downloaded. To reduce bandwidth consumption, if files are detected to be within the project directory, they are not downloaded. If a test_commands.txt file is provided within the project directory, they will be executed against a container to provide a basic functionality assessment. 
 
 ## Usage:
 - Single Image Build

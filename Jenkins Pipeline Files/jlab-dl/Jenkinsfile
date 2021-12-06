@@ -1,0 +1,57 @@
+pipeline {
+    agent none
+    stages {
+        stage ('Install Build Helpers') {
+            agent {
+                docker {
+                    image 'registry1.dso.mil/ironbank/aiml/jupyter/jlab-eda:latest'
+                    args '-u root -v /packagedrive/jlab-dl:/tmp'
+                    registryUrl 'https://registry1.dso.mil'
+                    registryCredentialsId 'ironbank-registry1-credential'
+                }
+            }
+            steps {
+                withCredentials([
+                    usernamePassword(credentialsId: 'redhat-developer-credential', usernameVariable: 'REDHAT_USERNAME', passwordVariable: 'REDHAT_PASSWORD')]) {
+                        sh '''
+                        mkdir -p /tmp/rpms/nvidia-gds /tmp/rpms/nvidia-driver /tmp/rpms/cuda /tmp/python-packages
+                        python3.8 -m pip download --no-cache-dir -d /tmp/python-packages/ wheel pbr tensorflow ds2 torch Keras fastai cudnnenv gluon
+
+                        subscription-manager register --auto-attach --username $REDHAT_USERNAME --password $REDHAT_PASSWORD
+                        subscription-manager repos --enable codeready-builder-for-rhel-8-x86_64-rpms
+                        subscription-manager repos --enable=rhel-8-for-x86_64-appstream-rpms
+                        subscription-manager repos --enable=rhel-8-for-x86_64-baseos-rpms
+                        dnf install --nogpgcheck -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
+                        dnf config-manager --add-repo https://developer.download.nvidia.com/compute/cuda/repos/rhel8/x86_64/cuda-rhel8.repo
+                        
+                        dnf install -y createrepo
+                        yum clean expire-cache
+                        dnf install -y --downloadonly --downloaddir=/tmp/rpms/nvidia-gds nvidia-gds
+                        createrepo /tmp/rpms/nvidia-gds
+                        d=`date +%m-%d-%Y`
+                        tar zcvf /tmp/python-packages-$d.tar.gz /tmp/python-packages
+                        tar zcvf /tmp/nvidia-gds-$d.tar.gz /tmp/rpms/nvidia-gds
+                        dnf install -y nvidia-gds
+                        yum clean expire-cache
+                        dnf module install -y --downloadonly --downloaddir=/tmp/rpms/nvidia-driver nvidia-driver:latest-dkms
+                        createrepo /tmp/rpms/nvidia-driver
+                        tar zcvf /tmp/nvidia-driver-$d.tar.gz /tmp/rpms/nvidia-driver
+                        dnf install -y nvidia-driver
+                        yum clean expire-cache
+                        dnf install -y --downloadonly --downloaddir=/tmp/rpms/cuda cuda
+                        createrepo /tmp/rpms/cuda
+                        tar zcvf /tmp/cuda-$d.tar.gz /tmp/rpms/cuda
+                        dnf install -y cuda
+                        subscription-manager unregister
+                        '''
+                }
+            }
+        }
+        stage ('Cleanup') {
+            agent any
+            steps {
+                sh "echo 'insert cleanup step'"
+            }
+        }
+    }
+}

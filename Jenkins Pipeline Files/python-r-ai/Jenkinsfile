@@ -1,0 +1,42 @@
+pipeline {
+    agent none
+    stages {
+        stage ('Install Build Helpers') {
+            agent {
+                docker {
+                    image 'registry1.dso.mil/ironbank/opensource/r/r-base:latest'
+                    args '-u root -v /packagedrive:/tmp'
+                    registryUrl 'https://registry1.dso.mil'
+                    registryCredentialsId 'ironbank-registry1-credential'
+                }
+            }
+            steps {
+                withCredentials([
+                    usernamePassword(credentialsId: 'redhat-developer-credential', usernameVariable: 'REDHAT_USERNAME', passwordVariable: 'REDHAT_PASSWORD')]) {
+                        sh '''
+                        mkdir -p /tmp/r-packages /tmp/rpms
+                        subscription-manager register --auto-attach --username $REDHAT_USERNAME --password $REDHAT_PASSWORD
+                        subscription-manager repos --enable codeready-builder-for-rhel-8-x86_64-rpms
+                        dnf install --nogpgcheck -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
+                        dnf install -y createrepo
+                        dnf install -y --downloadonly --downloaddir=/tmp/rpms/ binutils gcc-c++ git glib2-devel glibc-devel glibc-headers kernel-headers libcurl-devel libX11-common libxml2-devel libtiff-devel libuuid-devel lua-libs ncurses-libs pcre pcre-devel platform-python-pip net-tools openssl-devel unzip zip cairo cairo-devel cfitsio fontconfig fontconfig-devel freetype freetype-devel freexl gdal gdal-devel gdal-libs geos-devel glib2 gpsbabel harfbuzz-devel hdf5 http-parser ImageMagick-c++ ImageMagick-c++-devel ImageMagick-devel java-11-openjdk-devel jq keyutils krb5-libs libcom_err libgit2 libgit2-devel libjpeg-turbo libpng-devel libsepol libsodium libsodium-devel libX11 libXext-devel libxml2 libXrender-devel netcdf ogdi pixman-devel proj proj-devel protobuf-devel sqlite-devel udunits2 udunits2-devel xerces-c
+                        createrepo /tmp/rpms/
+                        d=`date +%m-%d-%Y`
+                        tar zcvf /tmp/python-r-ai/rpms-$d.tar.gz /tmp/rpms
+                        dnf install -y binutils cairo cairo-devel curl dnf-plugins-core fontconfig-devel gcc-c++ gdal-devel geos-devel git glib2-devel glibc-devel glibc-headers java-11-openjdk-devel kernel-headers libcurl-devel libpng-devel libsodium-devel libX11-common libxml2-devel net-tools openssl-devel proj-devel sqlite-devel unzip yum-utils zip
+                        R CMD javareconf
+                        R -e 'chooseCRANmirror(graphics=FALSE, ind=80); install.packages("packrat"); packrat::init("/tmp/r-packages"); install.packages(INSTALL_opts="--no-lock", c("broom", "C50", "cli", "devtools", "DT", "ECharts2Shiny", "feather", "flexdashboard", "flextable", "forcats", "foreign", "ggiraph", "gt", "highcharter", "htmlwidgets", "httr", "kableExtra", "kernlab", "kknn", "knitr", "lattice", "leaflet", "lubridate", "magrittr", "Matrix", "mlbench", "nlme", "nnet", "openxlsx", "packrat", "parsnip", "plotly", "plotROC", "plumber", "randomForest", "RCurl", "readr", "readxl", "reticulate", "RJDBC", "rmarkdown", "roxygen2", "rvest", "scales", "shiny", "shinydashboard", "shinyWidgets", "sparklyr", "stringr", "testthat", "themis", "tidymodels", "tidytext", "tidyverse", "timetk", "xgboost")); packrat::snapshot(); packrat::bundle();'
+                        subscription-manager unregister
+                        '''
+                }
+            }
+        }
+        stage ('Cleanup') {
+            agent any
+            steps {
+                sh "cp /packagedrive/r-packages/packrat/bundles/*.tar.gz /packagedrive/python-r-ai/"
+                sh "sudo rm -rf /packagedrive/r-packages /packagedrive/rpms"
+            }
+        }
+    }
+}

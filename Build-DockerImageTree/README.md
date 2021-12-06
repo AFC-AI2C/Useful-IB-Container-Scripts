@@ -57,4 +57,8 @@ python3.8 -c 'from bs4 import BeautifulSoup'
 R -e "library('broom')"
 R -e "plot(c(1,2,3),c(1,2,3))"
 R -e "library(recipes);library(tidyverse);library(tidyquant);library(timetk);FB_tbl <- FANG %>%filter(symbol == 'FB') %>% select(symbol, date, adjusted) ;rec_obj <- recipe(adjusted ~ ., data = FB_tbl) %>% step_fourier(date, period = c(252/4, 252), K = 2);  rec_obj"
+<<<<<<< HEAD
 ```
+=======
+```
+>>>>>>> 6952c6d5e706dac80d36265290b96891de54edd8

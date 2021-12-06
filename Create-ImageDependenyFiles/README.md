@@ -12,4 +12,4 @@ Note: Currently, all arguments are required for the script to function properly,
 ![Alt text](https://github.com/AFC-AI2C/Useful-IB-Container-Scripts/blob/main/Create-ImageDependenyFiles/screenshot.png)
 
 ## Notes:
-The FROM image names within the Dockerfiles should be the same as its directory name.
+Need to finish addeding some...

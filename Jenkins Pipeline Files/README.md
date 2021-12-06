@@ -8,6 +8,6 @@ The Jenkinsfiles contained herein were developed to expedite the remediation pro
 - Jenkinsfile:<br/>
 Each project name directory contains a Jenkinsfile that can be uploaded to a Jenkins server for automation.
 
-![Alt text](https://github.com/AFC-AI2C/Useful-IB-Container-Scripts/blob/main/Jenkins Pipeline Files/screenshot.png)
+![Alt text](https://github.com/AFC-AI2C/Useful-IB-Container-Scripts/blob/main/Jenkins%20Pipeline%20Files/screenshot.png)
 
 

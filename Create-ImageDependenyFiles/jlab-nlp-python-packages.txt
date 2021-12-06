@@ -1,0 +1,11 @@
+nltk
+gensim
+corenlp
+spacy
+textblob
+patterns
+PyNLPl
+yake
+dateparser
+gdown
+flair

@@ -1,0 +1,12 @@
+pip
+wheel
+pbr
+tensorflow
+ds2
+torch
+Keras
+fastai
+cudnnenv
+gluon
+click
+SQLAlchemy

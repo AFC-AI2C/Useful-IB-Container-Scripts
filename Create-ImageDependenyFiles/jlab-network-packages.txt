@@ -1,0 +1,8 @@
+python-igraph
+networkx
+scikit_network
+texttable
+pygraphviz
+decorator
+numpy
+scipy

@@ -1,0 +1,7 @@
+#gcc
+#git
+#make
+
+#nvidia-gds
+#nvidia-driver:latest-dkms
+#cuda

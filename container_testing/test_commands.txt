@@ -1,0 +1,5 @@
+python -c "import os"
+python -c "import plotly"
+python -c "import FAILURE-TEST"
+which ls
+curl -L www.google.com

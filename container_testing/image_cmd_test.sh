@@ -1,4 +1,11 @@
 #! /bin/bash
+     
+# Example:
+#    test-docker-images-against-commands.sh <image_ID | image_name:tag>
+# Note:
+#    You must populate the test_commands.txt with the commands to run against the container.
+#    Each command per line is executed against a fresh container of the image provided.
+#    The test_commands.txt file must be in the same directory as this script.
 
 # Terminal Colors
 red=`tput setaf 1`
@@ -15,7 +22,7 @@ for image in "${images[@]}"; do
     # rm -f ./$ReportDir/stderr_$image.txt
     # rm -f ./$ReportDir/stderr_$image.txt
 
-    test_cmd_file="./test.txt"
+    test_cmd_file="./test_commands.txt"
     if test -f "$test_cmd_file"; then
         #image_id=$(docker images | grep "^$image\b" | grep "$version" | tr -s ' ' | cut -d ' ' -f 3)
 
@@ -35,5 +42,7 @@ for image in "${images[@]}"; do
                 echo -e "    - ${red}$cmd  ${yellow}[View Error Log:  /tmp/stderr_$image.txt]${reset}"
             fi
         done <<< $test_commands
+
+        echo -e "${red}[!] ${reset}Successful std_out can be found at: ${yellow}[View Log:  /tmp/stdout_$image.txt]${reset}"
     fi
 done

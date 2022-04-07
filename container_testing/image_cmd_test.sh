@@ -2,10 +2,18 @@
      
 # Example:
 #    test-docker-images-against-commands.sh <image_ID | image_name:tag>
+#
 # Note:
 #    You must populate the test_commands.txt with the commands to run against the container.
 #    Each command per line is executed against a fresh container of the image provided.
 #    The test_commands.txt file must be in the same directory as this script.
+#
+# Usage:
+#    !!! The script currently only supports 'local' images, as in do not include images with repo/project in their imagename, like
+#    !!!      afcai2c/jlab-eda:latest
+#    !!! This will cause errors, because when the results are output to file, this script uses the image name, and it trys to output the results to a non-existant directory
+#    !!! Tag images with a simple name, for example:
+#    !!!      docker tag afcai2c/jlab-eda:latest jlab-eda
 
 # Terminal Colors
 red=`tput setaf 1`
@@ -18,9 +26,11 @@ images=( "$@" )
 
 # Test commands against image
 for image in "${images[@]}"; do
-    # # Removes existing report files
-    # rm -f ./$ReportDir/stderr_$image.txt
-    # rm -f ./$ReportDir/stderr_$image.txt
+    rm -f /tmp/stdout_$image.txt
+    rm -f /tmp/stderr_$image.txt
+
+    touch /tmp/stdout_$image.txt
+    touch /tmp/stderr_$image.txt
 
     test_cmd_file="./test_commands.txt"
     if test -f "$test_cmd_file"; then
